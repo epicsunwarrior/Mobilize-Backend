@@ -1,3 +1,15 @@
 README
 
-BE Take Home Assignment for Mobilize
+BE Take Home Assignment
+
+How to Run:
+* Run DynamoDB Locally - https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html
+* Run `node server.js` 
+* Run commands against port 8081
+
+Few Design Notes:
+* DynamoDB was chosen as a NoSQL database would allow for scalability, especially as there's no relationship between each key. In particular, DynamoDB was chosen as the database due to my experience with it.
+* To prevent scaling constraints on heavily traffiked short-links:
+ * I've introduced a local cache so that reads to DynamoDB would be O(machines) rather than O(visits)
+ * The mechanism used to store metrics is optimized for 'instant stats' over multiple machines. 
+ 	* If there's an acceptable delay to get stats over visits - a better mechanism would be to store all the events in a seperate file and pull that on the hour (or day).  And another machine can aggregate the metrics and write once into a data store on a O(unique shortlinks visited) - rather than writes being on the order of O(visits).
